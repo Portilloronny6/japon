@@ -1,5 +1,5 @@
 const RATE = 159;
-const TRIP_START = "2026-10-01";
+const TRIP_START = "2026-10-07";
 
 const hotels = [
   {
@@ -95,14 +95,15 @@ const hotels = [
 ];
 
 const TRAVELERS = 2;
+const BUDGET_REFERENCE_DAYS = 14;
 
 const budgetItems = [
-  { cat: "Vuelos Internacionales", usd: 1200, shareable: false },
-  { cat: "Alojamiento (habitación doble)", usd: 900, shareable: true },
-  { cat: "Transporte (JR, IC y tramos largos)", usd: 620, shareable: false },
-  { cat: "Gastronomía & Cenas", usd: 550, shareable: false },
-  { cat: "Actividades & Entradas (USJ + museos)", usd: 420, shareable: false },
-  { cat: "Extras Compartidos (WiFi, taxi, lavandería)", usd: 180, shareable: true },
+  { cat: "Vuelos Internacionales", usd: 1200, shareable: false, scalesWithDays: false },
+  { cat: "Alojamiento (habitación doble)", usd: 900, shareable: true, scalesWithDays: true },
+  { cat: "Transporte (JR, IC y tramos largos)", usd: 620, shareable: false, scalesWithDays: true },
+  { cat: "Gastronomía & Cenas", usd: 550, shareable: false, scalesWithDays: true },
+  { cat: "Actividades & Entradas (USJ + museos)", usd: 420, shareable: false, scalesWithDays: true },
+  { cat: "Extras Compartidos (WiFi, taxi, lavandería)", usd: 180, shareable: true, scalesWithDays: true },
 ];
 
 const cashPlan = {
@@ -118,10 +119,11 @@ const cashPlan = {
   ],
   criticalByDay: [
     "D1 Tokio: Omoide Yokocho e izakayas pequeños (frecuente solo efectivo).",
-    "D4 Kamakura/Enoshima: puestos locales, snacks y compras pequeñas.",
-    "D5 Hakone: traslados locales y paradas fuera de estación principal.",
-    "D12 Hiroshima/Miyajima: ferry, snacks y tiendas en isla.",
-    "D13 Nagasaki: taxis, buses o comercios sin terminal internacional.",
+    "D4 Tokio (Tsukiji): puestos/mercados donde el efectivo sigue siendo útil.",
+    "D5 Kamakura/Enoshima: puestos locales, snacks y compras pequeñas.",
+    "D6 Hakone: traslados locales y paradas fuera de estación principal.",
+    "D13 Hiroshima/Miyajima: ferry, snacks y tiendas en isla.",
+    "D14 Nagasaki: taxis, buses o comercios sin terminal internacional.",
   ],
 };
 
@@ -246,7 +248,7 @@ const safetyResearch = {
   spendBenchmark: {
     title: "Gasto promedio de visitante internacional (dato oficial 2025)",
     detail: "Referencia oficial: ~¥227,000 a ¥229,000 por visitante en viaje completo.",
-    note: "Tu plan de 14 días con ciudades múltiples y parque temático suele quedar por encima del promedio si incluyes vuelos internos y entradas premium.",
+    note: "Tu plan de 15 días con ciudades múltiples y parque temático suele quedar por encima del promedio si incluyes vuelos internos y entradas premium.",
   },
   sources: [
     { label: "FCDO Japón: seguridad y fraude nocturno", url: "https://www.gov.uk/foreign-travel-advice/japan/safety-and-security" },
@@ -288,12 +290,13 @@ const travelReadiness = {
   itineraryAttentionByDay: [
     "D1 Tokio: zona nocturna (Shinjuku/Kabukicho), evitar promotores de calle.",
     "D3 Shibuya: aglomeraciones fuertes; mochila al frente y bolsillos seguros.",
-    "D5 Hakone: revisar horarios de teleférico/barco y clima antes de subir.",
-    "D9 Nara: cuidado con ciervos y comida en mano (pueden empujar/morder).",
-    "D11 USJ: alta demanda; entrar temprano y asegurar pases/slots en app.",
-    "D12 Hiroshima-Miyajima: validar último ferry/tren de regreso para no correr.",
-    "D13 Nagasaki: conexiones largas; confirmar plataforma y margen entre trenes.",
-    "D14 Salida: tramo doméstico + internacional, llegar con bastante margen.",
+    "D4 Tokio (teamLab): alta demanda; reservar horario y llegar con margen.",
+    "D6 Hakone: revisar horarios de teleférico/barco y clima antes de subir.",
+    "D10 Nara: cuidado con ciervos y comida en mano (pueden empujar/morder).",
+    "D12 USJ: alta demanda; entrar temprano y asegurar pases/slots en app.",
+    "D13 Hiroshima-Miyajima: validar último ferry/tren de regreso para no correr.",
+    "D14 Nagasaki: conexiones largas; confirmar plataforma y margen entre trenes.",
+    "D15 Salida: tramo doméstico + internacional, llegar con bastante margen.",
   ],
 };
 
@@ -420,6 +423,45 @@ const itineraryData = [
   },
   {
     day: 4,
+    title: "Tokio de Contrastes: Tsukiji, Ginza y Odaiba",
+    city: "Tokio (Centro y Bahía)",
+    schedule: [
+      {
+        h: "08:00",
+        t: "Desayuno en Tsukiji Outer Market",
+        d: "Empieza el día en Tsukiji con sushi fresco, tamagoyaki y puestos callejeros. Es ideal llegar temprano para evitar filas y encontrar mejor variedad.",
+        maps: "https://www.google.com/maps/place/Tsukiji+Outer+Market/@35.6654866,139.7706408,17z",
+        cash: true,
+      },
+      {
+        h: "10:30",
+        t: "Jardines Hamarikyu",
+        d: "Pasea por este jardín tradicional entre rascacielos y toma un té matcha en la casa de té dentro del parque para una pausa tranquila.",
+        maps: "https://www.google.com/maps/place/Hamarikyu+Gardens/@35.6595248,139.7634015,17z",
+      },
+      {
+        h: "13:00",
+        t: "Ginza y compras urbanas",
+        d: "Recorre Ginza: grandes almacenes, papelerías premium y tiendas icónicas como UNIQLO/GU. Buen punto para compras de regalos y tax-free.",
+        maps: "https://www.google.com/maps/place/Ginza/@35.671702,139.764847,16z",
+      },
+      {
+        h: "16:30",
+        t: "teamLab Planets TOKYO",
+        d: "Experiencia inmersiva de arte digital en Toyosu. Requiere entrada con horario; conviene reservar con antelación para asegurar franja.",
+        maps: "https://www.google.com/maps/place/teamLab+Planets+TOKYO/@35.6491148,139.7897942,17z",
+        attention: true,
+      },
+      {
+        h: "19:30",
+        t: "Odaiba de noche",
+        d: "Cierra el día en la bahía de Tokio con vista al Rainbow Bridge y paseo por la zona costera. Ambiente ideal para fotos nocturnas.",
+        maps: "https://www.google.com/maps/place/Odaiba/@35.6272017,139.7750559,15z",
+      },
+    ],
+  },
+  {
+    day: 5,
     title: "Excursión Costera: Kamakura y Enoshima",
     city: "Kamakura (desde Tokio)",
     schedule: [
@@ -457,7 +499,7 @@ const itineraryData = [
     ],
   },
   {
-    day: 5,
+    day: 6,
     title: "Escapada Termal al Monte Fuji",
     city: "Hakone",
     schedule: [
@@ -497,7 +539,7 @@ const itineraryData = [
     ],
   },
   {
-    day: 6,
+    day: 7,
     title: "Rumbo a la Capital Imperial",
     city: "Viaje a Kioto",
     schedule: [
@@ -534,7 +576,7 @@ const itineraryData = [
     ],
   },
   {
-    day: 7,
+    day: 8,
     title: "Las 10,000 Puertas y Templo de Agua",
     city: "Kioto (Sur y Este)",
     schedule: [
@@ -571,7 +613,7 @@ const itineraryData = [
     ],
   },
   {
-    day: 8,
+    day: 9,
     title: "El Pabellón Dorado y Bosque de Bambú",
     city: "Kioto (Oeste y Norte)",
     schedule: [
@@ -608,7 +650,7 @@ const itineraryData = [
     ],
   },
   {
-    day: 9,
+    day: 10,
     title: "Ciervos Sagrados y Cambio de Ciudad",
     city: "Nara y Osaka",
     schedule: [
@@ -646,7 +688,7 @@ const itineraryData = [
     ],
   },
   {
-    day: 10,
+    day: 11,
     title: "Castillo, Retro y Rascacielos",
     city: "Osaka",
     schedule: [
@@ -683,7 +725,7 @@ const itineraryData = [
     ],
   },
   {
-    day: 11,
+    day: 12,
     title: "Mundos de Fantasía: Universal Studios Japan",
     city: "Osaka · Universal Studios Japan",
     schedule: [
@@ -722,7 +764,7 @@ const itineraryData = [
     ],
   },
   {
-    day: 12,
+    day: 13,
     title: "Hiroshima y Miyajima: Día Histórico",
     city: "Hiroshima",
     schedule: [
@@ -763,7 +805,7 @@ const itineraryData = [
     ],
   },
   {
-    day: 13,
+    day: 14,
     title: "Nagasaki: Memoria y Vista Nocturna",
     city: "Nagasaki",
     schedule: [
@@ -803,7 +845,7 @@ const itineraryData = [
     ],
   },
   {
-    day: 14,
+    day: 15,
     title: "Sayōnara Japón",
     city: "Nagasaki -> KIX",
     schedule: [

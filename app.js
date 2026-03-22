@@ -415,6 +415,56 @@ function updateTripCountdown() {
     diffDays > 0 ? "días para despegar" : "el viaje ya empezó";
 }
 
+function updateTripDurationDisplay() {
+  const days = itineraryData.length;
+  const durationEl = document.getElementById("summary-duration-days");
+  if (durationEl) durationEl.innerText = `${days} Días`;
+}
+
+function updateTripDateRangeDisplay() {
+  const rangeEl = document.getElementById("trip-date-range");
+  if (!rangeEl || !itineraryData.length) return;
+
+  const startDate = getTripDateByDay(1);
+  const endDate = getTripDateByDay(itineraryData.length);
+
+  let rangeText = "";
+  if (
+    startDate.getFullYear() === endDate.getFullYear() &&
+    startDate.getMonth() === endDate.getMonth()
+  ) {
+    const monthName = new Intl.DateTimeFormat("es-ES", { month: "long" }).format(startDate);
+    rangeText = `Del ${startDate.getDate()} al ${endDate.getDate()} de ${monthName} de ${startDate.getFullYear()}`;
+  } else {
+    const shortFormatter = new Intl.DateTimeFormat("es-ES", { day: "numeric", month: "long", year: "numeric" });
+    rangeText = `Del ${shortFormatter.format(startDate)} al ${shortFormatter.format(endDate)}`;
+  }
+
+  rangeEl.innerText = rangeText.charAt(0).toUpperCase() + rangeText.slice(1);
+}
+
+function getTripDateByDay(dayNumber) {
+  const tripDate = new Date(`${TRIP_START}T00:00:00`);
+  tripDate.setDate(tripDate.getDate() + (dayNumber - 1));
+  return tripDate;
+}
+
+function formatTripDate(dayNumber, mode = "long") {
+  const date = getTripDateByDay(dayNumber);
+  if (mode === "pill") {
+    return new Intl.DateTimeFormat("es-ES", { day: "2-digit", month: "short" })
+      .format(date)
+      .replace(".", "");
+  }
+  const longText = new Intl.DateTimeFormat("es-ES", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  }).format(date);
+  return longText.charAt(0).toUpperCase() + longText.slice(1);
+}
+
 function switchTab(id) {
   ["resumen", "itinerario", "pases", "seguridad", "hoteles", "presupuesto"].forEach((t) => {
     document.getElementById("sec-" + t).classList.add("hidden");
@@ -493,6 +543,7 @@ function renderSelectors() {
 
   itineraryData.forEach((d) => {
     const cityLabel = shortCityLabel(d.city);
+    const dateLabel = formatTripDate(d.day, "pill");
     const cashCriticalNote = criticalCashByDay.get(d.day);
     const hasCashActivities = d.schedule.some((item) => item.cash);
     const attentionNote = itineraryAttentionByDay.get(d.day);
@@ -508,10 +559,11 @@ function renderSelectors() {
               <span class="day-pill-day">D${d.day}</span>
               <span class="day-pill-dot">•</span>
               <span class="day-pill-city">${cityLabel}</span>
+              <span class="day-pill-date">${dateLabel}</span>
               ${dayFlags.length ? `<span class="day-pill-flags">${dayFlags.join("")}</span>` : ""}
           `;
     b.setAttribute("aria-label", `Ver día ${d.day}`);
-    b.title = `Día ${d.day} · ${d.city}${cashCriticalNote || hasCashActivities ? " · Algunos puntos requieren efectivo" : ""}${attentionNote || hasAttentionActivities ? " · Algunos puntos requieren atención" : ""}`;
+    b.title = `Día ${d.day} (${formatTripDate(d.day)}) · ${d.city}${cashCriticalNote || hasCashActivities ? " · Algunos puntos requieren efectivo" : ""}${attentionNote || hasAttentionActivities ? " · Algunos puntos requieren atención" : ""}`;
     b.onclick = () => {
       currentDay = d.day;
       setActiveDayButton();
@@ -541,6 +593,7 @@ function renderItinerary() {
     cityEl.innerHTML += `<span class="inline-attention-tag" title="Solo algunas actividades del día requieren atención extra">⚠ Estar atentos</span>`;
   }
   document.getElementById("daily-day-label").innerText = d.day < 10 ? "0" + d.day : d.day;
+  document.getElementById("daily-date").innerText = formatTripDate(d.day);
 
   const cont = document.getElementById("timeline-container");
   cont.innerHTML = "";
@@ -676,11 +729,27 @@ function renderBudget() {
   let personTotal = 0;
   let tripTotal = 0;
   const personValues = [];
+  const tripDays = itineraryData.length;
+  const referenceDays = Number(BUDGET_REFERENCE_DAYS) > 0 ? Number(BUDGET_REFERENCE_DAYS) : tripDays;
+  const dayFactor = tripDays / referenceDays;
+  const hasDurationAdjustment = Math.abs(dayFactor - 1) > 0.001;
+
+  const budgetDaysNote = document.getElementById("budget-days-note");
+  if (budgetDaysNote) {
+    budgetDaysNote.innerText = hasDurationAdjustment
+      ? `Presupuesto ajustado automáticamente: base ${referenceDays} días -> viaje actual ${tripDays} días`
+      : `Presupuesto base: ${referenceDays} días (sin ajuste aplicado)`;
+  }
 
   budgetItems.forEach((b) => {
-    const itemPersonUsd = b.shareable ? b.usd / TRAVELERS : b.usd;
-    const itemTripUsd = b.shareable ? b.usd : b.usd * TRAVELERS;
-    const splitLabel = b.shareable ? `Compartido entre ${TRAVELERS}` : "Gasto individual";
+    const baseUsd = Number(b.usd) || 0;
+    const adjustedUsd = b.scalesWithDays ? Math.round(baseUsd * dayFactor) : Math.round(baseUsd);
+    const itemPersonUsd = b.shareable ? adjustedUsd / TRAVELERS : adjustedUsd;
+    const itemTripUsd = b.shareable ? adjustedUsd : adjustedUsd * TRAVELERS;
+    let splitLabel = b.shareable ? `Compartido entre ${TRAVELERS}` : "Gasto individual";
+    if (hasDurationAdjustment && b.scalesWithDays) {
+      splitLabel += ` · Ajustado por ${tripDays} días`;
+    }
 
     personTotal += itemPersonUsd;
     tripTotal += itemTripUsd;
@@ -723,7 +792,7 @@ function renderBudget() {
               <div>
                 <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">Pagos y Efectivo</p>
                 <h4 class="text-2xl font-black text-ink mb-2">Efectivo recomendado por persona</h4>
-                <p class="text-sm text-gray-500">Estimación para 14 días con pago mixto (tarjeta + efectivo).</p>
+                <p class="text-sm text-gray-500">Estimación para ${itineraryData.length} días con pago mixto (tarjeta + efectivo).</p>
               </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 min-w-[280px]">
                 <div class="bg-white rounded-2xl p-3 border border-gray-200">
@@ -899,6 +968,8 @@ function renderSafetyResearch() {
 
 window.onload = () => {
   updateTripCountdown();
+  updateTripDurationDisplay();
+  updateTripDateRangeDisplay();
   hydrateExchangeRateControls();
   renderSelectors();
   renderSafetyResearch();
