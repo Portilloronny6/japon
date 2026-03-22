@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Japón Octubre 2026: Itinerario con Mapas Precisos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@700;900&family=Sora:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            colors: {
+              "japan-red": "#BC002D",
+              "japan-bg": "#FDFBF7",
+              ink: "#1A1A1A",
+              "google-blue": "#4285F4",
+              "japan-sand": "#F6EFE3",
+              "japan-gold": "#D98C00",
+              "japan-wave": "#0E4A67",
+            },
+          },
+        },
+      };
+    </script>
+
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body class="flex flex-col md:flex-row h-screen overflow-hidden">
+    <!-- Sidebar Navigation -->
+    <nav class="w-full md:w-72 panel-glass shadow-xl z-20 flex md:flex-col border-r border-white/70 flex-shrink-0">
+      <div class="p-8 hidden md:block">
+        <h1 class="text-3xl font-black text-ink tracking-tighter">JAPÓN<span class="text-japan-red">2026</span></h1>
+        <p class="text-[11px] text-gray-500 mt-2 uppercase font-bold tracking-[0.2em]">Ruta Octubre · UX Mejorada</p>
+        <p class="text-xs text-japan-wave font-bold mt-3">Ronny & Jesus</p>
+      </div>
+      <div class="flex-1 flex md:flex-col p-4 overflow-x-auto hide-scrollbar gap-2">
+        <button
+          onclick="switchTab('resumen')"
+          id="nav-resumen"
+          class="nav-btn text-left px-5 py-4 rounded-2xl bg-japan-red text-white font-bold transition-all shadow-lg whitespace-nowrap"
+        >
+          🗻 Resumen
+        </button>
+        <button
+          onclick="switchTab('itinerario')"
+          id="nav-itinerario"
+          class="nav-btn text-left px-5 py-4 rounded-2xl text-gray-500 hover:bg-gray-50 font-bold transition-all whitespace-nowrap"
+        >
+          📍 Itinerario & Mapas
+        </button>
+        <button
+          onclick="switchTab('pases')"
+          id="nav-pases"
+          class="nav-btn text-left px-5 py-4 rounded-2xl text-gray-500 hover:bg-gray-50 font-bold transition-all whitespace-nowrap"
+        >
+          🎫 Pasajes & Pases
+        </button>
+        <button
+          onclick="switchTab('seguridad')"
+          id="nav-seguridad"
+          class="nav-btn text-left px-5 py-4 rounded-2xl text-gray-500 hover:bg-gray-50 font-bold transition-all whitespace-nowrap"
+        >
+          🛡️ Seguridad & Precios
+        </button>
+        <button
+          onclick="switchTab('hoteles')"
+          id="nav-hoteles"
+          class="nav-btn text-left px-5 py-4 rounded-2xl text-gray-500 hover:bg-gray-50 font-bold transition-all whitespace-nowrap"
+        >
+          🏨 Hoteles Baratos
+        </button>
+        <button
+          onclick="switchTab('presupuesto')"
+          id="nav-presupuesto"
+          class="nav-btn text-left px-5 py-4 rounded-2xl text-gray-500 hover:bg-gray-50 font-bold transition-all whitespace-nowrap"
+        >
+          💴 Presupuesto
+        </button>
+      </div>
+      <div class="p-8 hidden md:block border-t border-gray-50">
+        <div class="flex justify-between items-center text-xs font-bold text-gray-400">
+          <span>1 USD</span>
+          <span>=</span>
+          <span id="exchange-rate-display-sidebar" class="text-japan-red">159 JPY</span>
+        </div>
+        <p class="text-[10px] text-gray-400 font-bold mt-2 uppercase tracking-[0.14em]">Editable en Presupuesto</p>
+      </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-y-auto p-4 md:p-12 relative">
+      <!-- SECTION: RESUMEN -->
+      <section id="sec-resumen" class="max-w-5xl mx-auto block animate-rise">
+        <div class="flex flex-col lg:flex-row gap-8 items-start justify-between mb-10">
+          <div>
+            <p class="text-xs font-black tracking-[0.24em] text-japan-wave uppercase mb-3">Plan de viaje · Octubre 2026</p>
+            <h2 class="text-5xl font-black text-ink mb-5 tracking-tight">Plan de Ruta Maestro</h2>
+            <p class="text-sm font-bold text-japan-wave mb-3">Viajeros: Ronny y Jesus</p>
+            <p class="text-xl text-gray-600 max-w-3xl leading-relaxed">
+              Itinerario optimizado para <strong>JR Pass + IC Cards</strong>, con enlaces de Google Maps normalizados a
+              coordenadas para abrir cada punto exacto.
+            </p>
+          </div>
+          <aside class="panel-glass border border-white/80 rounded-[28px] p-6 shadow-lg min-w-[210px]">
+            <span class="text-xs font-black tracking-[0.24em] uppercase text-gray-400 block">Cuenta Regresiva</span>
+            <p id="trip-countdown-days" class="text-5xl font-black text-japan-red leading-none mt-2">0</p>
+            <p id="trip-countdown-caption" class="text-sm font-bold text-gray-500 mt-2">días para despegar</p>
+          </aside>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-10">
+          <div class="panel-glass p-8 rounded-3xl shadow-sm border border-white/80">
+            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Tu Parte Estimada</h4>
+            <p class="text-3xl font-black text-japan-red" id="summary-total-usd">$0</p>
+            <p class="text-[11px] text-gray-500 font-bold mt-2">Dividiendo gastos compartibles entre 2</p>
+          </div>
+          <div class="panel-glass p-8 rounded-3xl shadow-sm border border-white/80">
+            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Moneda Local</h4>
+            <p class="text-3xl font-black text-ink" id="summary-total-jpy">¥0</p>
+          </div>
+          <div class="panel-glass p-8 rounded-3xl shadow-sm border border-white/80">
+            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-2">Duración</h4>
+            <p class="text-3xl font-black text-ink">14 Días</p>
+          </div>
+        </div>
+
+        <div class="mb-2">
+          <div class="bg-ink p-10 rounded-[40px] text-white flex flex-col md:flex-row items-center gap-8 shadow-2xl">
+            <div class="flex-1 text-center md:text-left">
+              <h3 class="text-3xl font-bold mb-4">Nota de Navegación</h3>
+              <p class="opacity-80 text-lg">
+                Los iconos de mapa abren la zona exacta. Si el enlace original no trae coordenadas, se transforma a una
+                búsqueda precisa por lugar y ciudad en Japón.
+              </p>
+            </div>
+            <div class="text-6xl">🗾</div>
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION: ITINERARIO -->
+      <section id="sec-itinerario" class="max-w-5xl mx-auto hidden pb-20">
+        <div class="mb-8">
+          <div class="itinerary-hero-shell">
+            <div class="itinerary-copy">
+              <span class="itinerary-tag">Itinerario Interactivo</span>
+              <h2 class="text-3xl md:text-4xl font-black text-ink mt-3 mb-3">Ruta Diaria Específica</h2>
+              <p class="text-gray-500 text-base md:text-lg">Logística, trenes exactos y comida local recomendada.</p>
+            </div>
+            <div class="w-full">
+              <div id="day-selector" class="day-selector">
+                <!-- JS Injected -->
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="bg-white rounded-[40px] shadow-sm border border-gray-100 p-6 md:p-12">
+          <div class="flex items-center gap-4 mb-12">
+            <span
+              id="daily-day-label"
+              class="bg-japan-red text-white w-16 h-16 rounded-2xl flex items-center justify-center font-black text-3xl shadow-lg shadow-red-200"
+              >01</span
+            >
+            <div>
+              <h3 id="daily-title" class="text-2xl md:text-3xl font-black text-ink leading-tight">Carga Inicial...</h3>
+              <p id="daily-city" class="text-gray-400 font-bold mt-1 uppercase tracking-widest text-xs">Tokio</p>
+            </div>
+          </div>
+
+          <div id="timeline-container" class="relative border-l-2 border-gray-100 ml-4 pl-8 md:pl-10 space-y-10">
+            <!-- JS Injected -->
+          </div>
+        </div>
+      </section>
+
+      <!-- SECTION: PASAJES Y PASES -->
+      <section id="sec-pases" class="max-w-5xl mx-auto hidden">
+        <h2 class="text-4xl font-black text-ink mb-4">Pasajes y Pases (Guía General)</h2>
+        <p class="text-gray-600 mb-8">
+          Como turista, normalmente combinas un pase JR o billetes sueltos para trayectos largos + una IC Card para
+          metro/bus/trenes urbanos.
+        </p>
+
+        <div class="grid md:grid-cols-2 gap-6">
+          <article class="panel-glass rounded-3xl p-7 border border-white/80 shadow-sm">
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">1) JAPAN RAIL PASS</p>
+            <h3 class="text-2xl font-black text-ink mb-3">Para viajes largos entre ciudades</h3>
+            <p class="text-gray-600 leading-relaxed mb-4">
+              Se compra online en la web oficial (o en agencias autorizadas) y se recoge en Japón mostrando pasaporte
+              con estatus de visitante temporal.
+            </p>
+            <div class="flex flex-wrap gap-3">
+              <a
+                href="https://japanrailpass.net/en/purchase/online/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="bg-japan-wave text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-japan-red transition-colors"
+                >Comprar JR Pass</a
+              >
+              <a
+                href="https://japanrailpass.net/en/exchange/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="bg-white text-ink px-4 py-2 rounded-xl text-sm font-bold border border-gray-200 hover:border-japan-red transition-colors"
+                >Puntos de retiro/canje</a
+              >
+            </div>
+          </article>
+
+          <article class="panel-glass rounded-3xl p-7 border border-white/80 shadow-sm">
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">2) IC CARD</p>
+            <h3 class="text-2xl font-black text-ink mb-3">Para metro, bus y trayectos urbanos</h3>
+            <p class="text-gray-600 leading-relaxed mb-4">
+              En Tokio suele usarse Suica/PASMO y en Kansai ICOCA o KANSAI ONE PASS. Se recargan en máquinas y sirven
+              para moverte sin comprar boleto en cada tramo.
+            </p>
+            <div class="flex flex-wrap gap-3">
+              <a
+                href="https://www.jreast.co.jp/multi/en/welcomesuica/purchase.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="bg-japan-wave text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-japan-red transition-colors"
+                >Welcome Suica</a
+              >
+              <a
+                href="https://www.pasmo.co.jp/visitors/en/issue/"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="bg-white text-ink px-4 py-2 rounded-xl text-sm font-bold border border-gray-200 hover:border-japan-red transition-colors"
+                >Comprar PASMO</a
+              >
+              <a
+                href="https://www.westjr.co.jp/global/en/howto/guide/movie03.html"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="bg-white text-ink px-4 py-2 rounded-xl text-sm font-bold border border-gray-200 hover:border-japan-red transition-colors"
+                >Comprar ICOCA</a
+              >
+            </div>
+          </article>
+
+          <article class="panel-glass rounded-3xl p-7 border border-white/80 shadow-sm">
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">3) BILLETES SUELTOS</p>
+            <h3 class="text-2xl font-black text-ink mb-3">Si no compras pase nacional</h3>
+            <p class="text-gray-600 leading-relaxed mb-4">
+              Puedes comprar billetes en máquinas o ventanillas de estación. Para muchos viajeros, esta opción + IC
+              card es suficiente si hacen pocos trayectos largos.
+            </p>
+            <a
+              href="https://faq-support.westjr.co.jp/hc/en-us/articles/8880546798607-Where-can-I-buy-tickets"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="inline-flex bg-japan-wave text-white px-4 py-2 rounded-xl text-sm font-bold hover:bg-japan-red transition-colors"
+              >Dónde comprar billetes</a
+            >
+          </article>
+
+          <article class="panel-glass rounded-3xl p-7 border border-white/80 shadow-sm">
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">4) REGLA SIMPLE</p>
+            <h3 class="text-2xl font-black text-ink mb-3">Qué te conviene primero</h3>
+            <ul class="space-y-2 text-gray-600 font-medium">
+              <li>JR Pass: cuando harás varios trayectos largos en pocos días.</li>
+              <li>IC Card: siempre útil para ciudad.</li>
+              <li>Billetes sueltos: si no te compensa el pase nacional.</li>
+            </ul>
+            <p class="text-xs text-gray-400 mt-4">
+              Nota: horarios, puntos de venta y condiciones cambian; verifica siempre en la web oficial antes de pagar.
+            </p>
+          </article>
+        </div>
+      </section>
+
+      <!-- SECTION: SEGURIDAD Y PRECIOS -->
+      <section id="sec-seguridad" class="max-w-5xl mx-auto hidden pb-20">
+        <div class="safety-hero panel-glass rounded-[36px] p-7 md:p-10 border border-white/80 shadow-sm mb-8">
+          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
+            <div>
+              <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">Investigación práctica para turistas</p>
+              <h2 class="text-4xl font-black text-ink mb-3">Seguridad Antiestafas + Precios Reales</h2>
+              <p class="text-gray-600 max-w-3xl">
+                Reglas claras para evitar cobros abusivos y referencias de costos verificables para planear mejor el presupuesto.
+              </p>
+            </div>
+            <p id="safety-updated" class="text-xs font-black uppercase tracking-[0.14em] text-gray-400">Actualizado: --</p>
+          </div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6 mb-8">
+          <article class="safety-card rounded-3xl p-6 border border-gray-100 bg-white shadow-sm">
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">Zonas de atención</p>
+            <h3 class="text-2xl font-black text-ink mb-4">Riesgo más alto por la noche</h3>
+            <div id="safety-risk-zones" class="flex flex-wrap gap-2 mb-4"></div>
+            <ul id="safety-common-scams" class="space-y-2 text-sm text-gray-600"></ul>
+          </article>
+          <article class="safety-card rounded-3xl p-6 border border-gray-100 bg-white shadow-sm">
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">Checklist</p>
+            <h3 class="text-2xl font-black text-ink mb-4">Cómo evitar estafas en práctica</h3>
+            <ul id="safety-tips-list" class="space-y-2 text-sm text-gray-600"></ul>
+          </article>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6 mb-8">
+          <article class="safety-card rounded-3xl p-6 border border-gray-100 bg-white shadow-sm">
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">Pagos</p>
+            <h3 class="text-2xl font-black text-ink mb-4">Tarjeta vs efectivo</h3>
+            <ul id="money-safety-list" class="space-y-2 text-sm text-gray-600"></ul>
+          </article>
+          <article class="safety-card rounded-3xl p-6 border border-gray-100 bg-white shadow-sm">
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">Emergencias</p>
+            <h3 class="text-2xl font-black text-ink mb-4">Números y contacto útil</h3>
+            <div id="emergency-contacts" class="space-y-3"></div>
+          </article>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6 mb-8">
+          <article class="safety-card rounded-3xl p-6 border border-gray-100 bg-white shadow-sm">
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">Checklist</p>
+            <h3 class="text-2xl font-black text-ink mb-4">Cosas que deben llevar sí o sí</h3>
+            <ul id="must-pack-list" class="space-y-2 text-sm text-gray-600"></ul>
+          </article>
+          <article class="safety-card rounded-3xl p-6 border border-gray-100 bg-white shadow-sm">
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">Atentos</p>
+            <h3 class="text-2xl font-black text-ink mb-4">Cosas a vigilar durante el viaje</h3>
+            <ul id="watchout-list" class="space-y-2 text-sm text-gray-600 mb-4"></ul>
+            <p class="text-xs font-black uppercase tracking-[0.16em] text-gray-400 mb-2">Alertas en tu itinerario</p>
+            <ul id="itinerary-attention-list" class="space-y-2 text-sm text-gray-600"></ul>
+          </article>
+        </div>
+
+        <div class="mb-8">
+          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-3 mb-4">
+            <h3 class="text-3xl font-black text-ink">Precios de Referencia</h3>
+            <p class="text-xs font-bold uppercase tracking-[0.14em] text-gray-400">
+              Valores base en yenes, sujetos a cambios oficiales
+            </p>
+          </div>
+          <div id="price-reference-grid" class="grid md:grid-cols-2 gap-5"></div>
+        </div>
+
+        <div class="grid lg:grid-cols-2 gap-6 mb-8">
+          <article class="safety-card rounded-3xl p-6 border border-gray-100 bg-white shadow-sm">
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">Costos extra</p>
+            <h3 class="text-2xl font-black text-ink mb-4">Alertas que sí afectan tu presupuesto</h3>
+            <div id="extra-cost-alerts" class="space-y-3"></div>
+          </article>
+          <article class="safety-card rounded-3xl p-6 border border-gray-100 bg-white shadow-sm">
+            <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">Benchmark real</p>
+            <h3 class="text-2xl font-black text-ink mb-4">Gasto promedio de visitante</h3>
+            <div id="spend-benchmark"></div>
+          </article>
+        </div>
+
+        <article class="safety-card rounded-3xl p-6 border border-gray-100 bg-white shadow-sm">
+          <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">Fuentes</p>
+          <h3 class="text-2xl font-black text-ink mb-4">Enlaces oficiales usados</h3>
+          <div id="safety-sources" class="grid md:grid-cols-2 gap-2"></div>
+        </article>
+      </section>
+
+      <!-- SECTION: HOTELES -->
+      <section id="sec-hoteles" class="max-w-5xl mx-auto hidden">
+        <div class="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-8">
+          <div>
+            <h2 class="text-4xl font-black text-ink">Hoteles Más Baratos (tope $100)</h2>
+            <p class="text-gray-500 mt-2">Opciones reales por zona, incluyendo Universal Studios.</p>
+          </div>
+          <a
+            href="https://www.google.com/maps/search/?api=1&query=Hotels+near+Universal+Studios+Japan+Osaka"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="text-sm font-bold bg-japan-wave text-white px-4 py-2 rounded-xl hover:bg-japan-red transition-colors w-fit"
+            >Ver hoteles en zona USJ</a
+          >
+        </div>
+        <div class="panel-glass border border-white/80 rounded-3xl p-5 mb-8 grid sm:grid-cols-2 gap-5">
+          <label class="block">
+            <span class="text-xs font-black text-gray-400 uppercase tracking-[0.2em]">Ciudad</span>
+            <select id="hotel-city-filter" class="mt-2 w-full border border-gray-200 rounded-xl px-3 py-3 bg-white">
+              <option value="Todas">Todas</option>
+            </select>
+          </label>
+          <label class="block">
+            <span class="text-xs font-black text-gray-400 uppercase tracking-[0.2em]"
+              >Máximo por noche: <span id="hotel-max-price-label" class="text-japan-red">$100</span></span
+            >
+            <input
+              id="hotel-max-price"
+              type="range"
+              min="60"
+              max="100"
+              step="5"
+              value="100"
+              class="mt-4 w-full accent-[#BC002D]"
+            />
+          </label>
+        </div>
+        <div id="hotel-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <!-- JS Injected -->
+        </div>
+      </section>
+
+      <!-- SECTION: PRESUPUESTO -->
+      <section id="sec-presupuesto" class="max-w-5xl mx-auto hidden">
+        <h2 class="text-4xl font-black text-ink mb-4">Finanzas del Viaje</h2>
+        <p class="text-gray-500 mb-8">Modo 2 viajeros: aquí ves total del viaje y tu parte por persona.</p>
+
+        <div class="panel-glass border border-white/80 rounded-3xl p-5 md:p-6 mb-8">
+          <div class="flex flex-col md:flex-row md:items-end md:justify-between gap-5">
+            <div>
+              <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">Tipo de cambio (editable)</p>
+              <p class="text-2xl font-black text-ink">1 USD = <span id="exchange-rate-display-main" class="text-japan-red">159</span> JPY</p>
+              <p class="text-xs text-gray-500 mt-1">Cambia este valor y todo el presupuesto se recalcula automáticamente.</p>
+            </div>
+            <div class="flex items-end gap-2">
+              <label class="block">
+                <span class="text-[11px] font-black text-gray-400 uppercase tracking-[0.16em]">USD a JPY</span>
+                <input
+                  id="exchange-rate-input"
+                  type="number"
+                  min="100"
+                  max="250"
+                  step="1"
+                  value="159"
+                  class="mt-2 w-28 border border-gray-200 rounded-xl px-3 py-2 bg-white font-black text-ink"
+                />
+              </label>
+              <button
+                id="exchange-rate-reset"
+                type="button"
+                class="h-[42px] px-4 rounded-xl border border-gray-200 bg-white text-gray-600 text-sm font-black hover:border-japan-red hover:text-japan-red transition-colors"
+              >
+                Reset
+              </button>
+            </div>
+          </div>
+        </div>
+        <div class="grid lg:grid-cols-3 gap-8">
+          <div class="lg:col-span-1 bg-white p-8 rounded-[40px] shadow-sm border border-gray-100">
+            <h3 class="font-bold mb-8 text-center text-gray-400">Distribución</h3>
+            <div class="h-64">
+              <canvas id="budgetChart"></canvas>
+            </div>
+          </div>
+          <div class="lg:col-span-2 bg-white p-10 rounded-[40px] shadow-sm border border-gray-100">
+            <div id="budget-rows" class="space-y-6">
+              <!-- JS Injected -->
+            </div>
+            <div class="mt-12 pt-8 border-t-2 border-dashed border-gray-100 flex justify-between items-end">
+              <div>
+                <span class="text-xs font-bold text-gray-400 uppercase tracking-widest">Total Viaje (2 Personas)</span>
+                <div class="text-4xl md:text-5xl font-black text-japan-red mt-1" id="total-jpy">¥0</div>
+              </div>
+              <div class="text-right">
+                <span class="text-2xl font-black text-ink" id="total-usd">$0</span>
+                <span class="block text-[10px] text-gray-400 font-bold">Tu Parte (Dividido)</span>
+              </div>
+            </div>
+
+            <div id="cash-plan-card" class="mt-8 panel-glass rounded-3xl border border-white/80 p-6 md:p-7">
+              <!-- JS Injected -->
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <script src="./data.js"></script>
+    <script src="./app.js"></script>
+  </body>
+</html>
