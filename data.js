@@ -166,6 +166,14 @@ const safetyResearch = {
     },
     {
       category: "Transporte",
+      item: "Willer Express Bus (Tokyo-Osaka)",
+      yen: "¥4,000 - ¥8,000 (por trayecto/persona)",
+      usdFromJpy: [4000, 8000],
+      usdMode: "range",
+      note: "Alternativa low-cost. El 'Bus Pass' se descontinúa en 2025; para 2026 se compran tickets sueltos.",
+    },
+    {
+      category: "Transporte",
       item: "Tokyo Metro boleto sencillo",
       yen: "¥180 / ¥210 / ¥260 / ¥300 / ¥330",
       usdFromJpy: [180, 210, 260, 300, 330],
@@ -230,6 +238,11 @@ const safetyResearch = {
   ],
   extraCostAlerts: [
     {
+      title: "Japan Bus Pass (Willer)",
+      detail: "¡Atención! Ventas finalizan en sep 2025. Para oct 2026 NO existirá este pase.",
+      impact: "Debes comprar billetes individuales (~¥5,000). Sigue siendo mucho más barato que el Shinkansen (¥14,500).",
+    },
+    {
       title: "Impuesto de alojamiento en Kioto (por persona/noche)",
       detail: "¥200 (<¥6,000), ¥400 (¥6,000-¥19,999), ¥1,000 (¥20,000-¥49,999), ¥4,000 (¥50,000-¥99,999), ¥10,000 (>=¥100,000).",
       impact: "No siempre aparece separado al comparar hoteles; revisa el detalle final de la reserva.",
@@ -255,6 +268,7 @@ const safetyResearch = {
     { label: "Policía de Tokio: evitar delitos en zonas de ocio", url: "https://www.keishicho.metro.tokyo.lg.jp/multilingual/english/safe_society/victim_of_crime/hankagai.html" },
     { label: "JNTO: pagos cashless y límites reales", url: "https://www.japan.travel/en/plan/cashless-payments-in-japan/" },
     { label: "JR Pass oficial: precios", url: "https://japanrailpass.net/en/purchase/price/" },
+    { label: "Willer Express (Japan Bus Pass)", url: "https://willerexpress.com/en/" },
     { label: "Tokyo Metro: tarifas regulares", url: "https://www.tokyometro.jp/lang_en/ticket/types/regular/index.html" },
     { label: "Tokyo Subway Ticket (turista)", url: "https://www.tokyometro.jp/tst/en/index.html" },
     { label: "Welcome Suica: compra y condiciones", url: "https://www.jreast.co.jp/multi/en/welcomesuica/purchase.html" },
