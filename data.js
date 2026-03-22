@@ -305,15 +305,15 @@ const itineraryData = [
     schedule: [
       {
         h: "09:00",
-        t: "Llegada al Aeropuerto de Narita",
-        d: "Pasa migración. Baja a la planta B1, recoge tu Pocket WiFi/SIM y valida tu JR Pass en la oficina de JR East. Compra o carga una tarjeta Welcome Suica en las máquinas para los metros locales no cubiertos por JR.",
-        maps: "https://www.google.com/maps/place/Narita+International+Airport/@35.7719867,140.3928501,15z",
+        t: "Llegada al Aeropuerto de Haneda (HND)",
+        d: "Pasa migración y equipaje. En Haneda Terminal 3 recoge tu Pocket WiFi/SIM, retira efectivo en ATM (7-Bank/Japan Post) y compra o carga una IC Card (Welcome Suica/PASMO) para moverte en Tokio.",
+        maps: "https://www.google.com/maps/place/Haneda+Airport+Terminal+3/@35.5485644,139.7845734,17z",
       },
       {
         h: "11:30",
-        t: "Narita Express (N'EX)",
-        d: "Toma el tren N'EX directo a la estación de Shinjuku (incluido en el JR Pass si lo activaste, sino cuesta unos ¥3,200). El trayecto dura 80 minutos. Relájate y disfruta del paisaje cambiando a ciudad.",
-        maps: "https://www.google.com/maps/place/JR+East+Travel+Service+Center/@35.7725,140.3875,17z",
+        t: "Traslado Haneda -> Shinjuku (Keikyu + JR)",
+        d: "Toma Keikyu Airport Line desde Haneda Airport Terminal 3 hasta Shinagawa y conecta con JR Yamanote hacia Shinjuku. Tiempo típico: 45-55 min. Costo aproximado: ¥700-¥900 (el tramo Keikyu se paga con IC Card).",
+        maps: "https://www.google.com/maps/place/Haneda+Airport+Terminal+3+Station/@35.5495838,139.7871645,17z",
       },
       {
         h: "14:00",
