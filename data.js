@@ -158,14 +158,6 @@ const safetyResearch = {
   realisticPrices: [
     {
       category: "Transporte",
-      item: "Japan Rail Pass (Ordinary)",
-      yen: "¥50,000 (7 días) · ¥80,000 (14 días) · ¥100,000 (21 días)",
-      usdFromJpy: [50000, 80000, 100000],
-      usdMode: "list",
-      note: "Pase nacional oficial para visitantes temporales.",
-    },
-    {
-      category: "Transporte",
       item: "Willer Express Bus (Tokyo-Osaka)",
       yen: "¥4,000 - ¥8,000 (por trayecto/persona)",
       usdFromJpy: [4000, 8000],
