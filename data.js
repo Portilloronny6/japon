@@ -232,11 +232,13 @@ const safetyResearch = {
     {
       title: "Japan Bus Pass (Willer)",
       detail: "¡Atención! Ventas finalizan en sep 2025. Para oct 2026 NO existirá este pase.",
-      impact: "Debes comprar billetes individuales (~¥5,000). Sigue siendo mucho más barato que el Shinkansen (¥14,500).",
+      impact:
+        "Debes comprar billetes individuales (~¥5,000). Sigue siendo mucho más barato que el Shinkansen (¥14,500).",
     },
     {
       title: "Impuesto de alojamiento en Kioto (por persona/noche)",
-      detail: "¥200 (<¥6,000), ¥400 (¥6,000-¥19,999), ¥1,000 (¥20,000-¥49,999), ¥4,000 (¥50,000-¥99,999), ¥10,000 (>=¥100,000).",
+      detail:
+        "¥200 (<¥6,000), ¥400 (¥6,000-¥19,999), ¥1,000 (¥20,000-¥49,999), ¥4,000 (¥50,000-¥99,999), ¥10,000 (>=¥100,000).",
       impact: "No siempre aparece separado al comparar hoteles; revisa el detalle final de la reserva.",
     },
     {
@@ -256,14 +258,29 @@ const safetyResearch = {
     note: "Tu plan de 15 días con ciudades múltiples y parque temático suele quedar por encima del promedio si incluyes vuelos internos y entradas premium.",
   },
   sources: [
-    { label: "FCDO Japón: seguridad y fraude nocturno", url: "https://www.gov.uk/foreign-travel-advice/japan/safety-and-security" },
-    { label: "Policía de Tokio: evitar delitos en zonas de ocio", url: "https://www.keishicho.metro.tokyo.lg.jp/multilingual/english/safe_society/victim_of_crime/hankagai.html" },
-    { label: "JNTO: pagos cashless y límites reales", url: "https://www.japan.travel/en/plan/cashless-payments-in-japan/" },
+    {
+      label: "FCDO Japón: seguridad y fraude nocturno",
+      url: "https://www.gov.uk/foreign-travel-advice/japan/safety-and-security",
+    },
+    {
+      label: "Policía de Tokio: evitar delitos en zonas de ocio",
+      url: "https://www.keishicho.metro.tokyo.lg.jp/multilingual/english/safe_society/victim_of_crime/hankagai.html",
+    },
+    {
+      label: "JNTO: pagos cashless y límites reales",
+      url: "https://www.japan.travel/en/plan/cashless-payments-in-japan/",
+    },
     { label: "JR Pass oficial: precios", url: "https://japanrailpass.net/en/purchase/price/" },
     { label: "Willer Express (Japan Bus Pass)", url: "https://willerexpress.com/en/" },
-    { label: "Tokyo Metro: tarifas regulares", url: "https://www.tokyometro.jp/lang_en/ticket/types/regular/index.html" },
+    {
+      label: "Tokyo Metro: tarifas regulares",
+      url: "https://www.tokyometro.jp/lang_en/ticket/types/regular/index.html",
+    },
     { label: "Tokyo Subway Ticket (turista)", url: "https://www.tokyometro.jp/tst/en/index.html" },
-    { label: "Welcome Suica: compra y condiciones", url: "https://www.jreast.co.jp/multi/en/welcomesuica/purchase.html" },
+    {
+      label: "Welcome Suica: compra y condiciones",
+      url: "https://www.jreast.co.jp/multi/en/welcomesuica/purchase.html",
+    },
     { label: "ICOCA: guía JR West", url: "https://www.westjr.co.jp/global/en/howto/icoca/" },
     { label: "KANSAI ONE PASS: aviso de ventas", url: "https://kansaionepass.com/en/about.html" },
     { label: "Kinkaku-ji: acceso y tarifas", url: "https://www.shokoku-ji.jp/en/kinkakuji/access/" },

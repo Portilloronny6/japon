@@ -4,6 +4,135 @@ const RATE_STORAGE_KEY = "japan_usd_jpy_rate";
 const DEFAULT_EXCHANGE_RATE = RATE;
 let exchangeRate = DEFAULT_EXCHANGE_RATE;
 
+const EMBASSY_PDF_CONFIG = {
+  applicantName: "Ronny Portillo",
+  companionCount: 1,
+  templates: {
+    moscow: "./schedule.pdf",
+    caracas: "./000262548.pdf",
+  },
+  hotelsByCity: {
+    tokio: {
+      name: "Shinjuku Prince Hotel",
+      phone: "+81-3-3205-1111",
+      address: "1-30-1 Kabukicho, Shinjuku City, Tokyo",
+    },
+    kamakura: {
+      name: "Shinjuku Prince Hotel",
+      phone: "+81-3-3205-1111",
+      address: "1-30-1 Kabukicho, Shinjuku City, Tokyo",
+    },
+    hakone: {
+      name: "Hakone Ashinoko Hanaori",
+      phone: "+81-460-83-8739",
+      address: "160 Motohakone Togendai, Hakone, Kanagawa",
+    },
+    kioto: {
+      name: "Sotetsu Fresa Inn Kyoto-Kiyomizu Gojo",
+      phone: "+81-75-741-2031",
+      address: "391 Shiogamacho, Shimogyo Ward, Kyoto",
+    },
+    nara: {
+      name: "APA Hotel & Resort Midosuji Hommachi Eki Tower",
+      phone: "+81-570-068-411",
+      address: "4-2-9 Minamihonmachi, Chuo Ward, Osaka",
+    },
+    osaka: {
+      name: "APA Hotel & Resort Midosuji Hommachi Eki Tower",
+      phone: "+81-570-068-411",
+      address: "4-2-9 Minamihonmachi, Chuo Ward, Osaka",
+    },
+    hiroshima: {
+      name: "EN HOTEL Hiroshima",
+      phone: "+81-82-242-0505",
+      address: "7-8 Kanayamacho, Naka Ward, Hiroshima",
+    },
+    nagasaki: {
+      name: "Hotel Wing Port Nagasaki",
+      phone: "+81-95-833-2800",
+      address: "9-2 Daikokumachi, Nagasaki",
+    },
+    kix: {
+      name: "Hotel Nikko Kansai Airport",
+      phone: "+81-72-455-1111",
+      address: "1 Senshukukokita, Izumisano, Osaka",
+    },
+  },
+};
+
+const EMBASSY_ACTIVITY_TITLE_TRANSLATIONS = {
+  "Llegada al Aeropuerto de Haneda (HND)": "Arrival at Haneda Airport (HND)",
+  "Traslado Haneda -> Shinjuku (Keikyu + JR)": "Transfer from Haneda to Shinjuku (Keikyu + JR)",
+  "Check-in y Comida Rápida": "Hotel check-in and quick meal",
+  "Mirador del Gobierno Metropolitano": "Tokyo Metropolitan Government Building Observatory",
+  "Cena: Omoide Yokocho (Callejón del Recuerdo)": "Dinner: Omoide Yokocho (Memory Lane)",
+  "Templo Senso-ji y Asakusa": "Senso-ji Temple and Asakusa",
+  "Kappabashi (Calle de la Cocina)": "Kappabashi Kitchen Street",
+  "Parque Ueno y Ameyoko": "Ueno Park and Ameyoko",
+  "Akihabara (Electric Town)": "Akihabara (Electric Town)",
+  "Cena: Gyukatsu Motomura": "Dinner: Gyukatsu Motomura",
+  "Santuario Meiji Jingu": "Meiji Jingu Shrine",
+  "Takeshita Street en Harajuku": "Takeshita Street in Harajuku",
+  "Comida: Sushi en Omotesando": "Lunch: Sushi in Omotesando",
+  "El Cruce de Shibuya y Hachiko": "Shibuya Crossing and Hachiko",
+  "Atardecer en Shibuya Sky": "Sunset at Shibuya Sky",
+  "Cena y Exploración: Center Gai": "Dinner and exploration in Center Gai",
+  "Desayuno en Tsukiji Outer Market": "Breakfast at Tsukiji Outer Market",
+  "Jardines Hamarikyu": "Hamarikyu Gardens",
+  "Ginza y compras urbanas": "Ginza and city shopping",
+  "Odaiba de noche": "Odaiba at night",
+  "Tren a Kamakura": "Train to Kamakura",
+  "Gran Buda de Kamakura (Kotoku-in)": "Great Buddha of Kamakura (Kotoku-in)",
+  "Templo Hase-dera + Komachi-dori": "Hase-dera Temple and Komachi-dori",
+  "Enoden hacia Enoshima": "Enoden train to Enoshima",
+  "Regreso a Tokio": "Return to Tokyo",
+  "Romancecar a Hakone": "Romancecar to Hakone",
+  "Owakudani (Valle Hirviente)": "Owakudani Valley",
+  "Crucero en Barco Pirata": "Pirate ship cruise",
+  "Check-in Ryokan Hanaori": "Check-in at Ryokan Hanaori",
+  "Desayuno Japonés y Descenso": "Japanese breakfast and descent",
+  "Shinkansen (Tren Bala) a Kioto": "Shinkansen (bullet train) to Kyoto",
+  "Comida: Estación de Kioto": "Lunch at Kyoto Station",
+  "Check-in y Paseo por Gion": "Check-in and walk through Gion",
+  "Cena a Orillas del Río Kamo": "Dinner along the Kamo River",
+  "Templo Kiyomizu-dera": "Kiyomizu-dera Temple",
+  "Paseo por Sannenzaka y Ninenzaka": "Walk through Sannenzaka and Ninenzaka",
+  "Santuario Yasaka y Parque Maruyama": "Yasaka Shrine and Maruyama Park",
+  "Cena: Shabu Shabu": "Dinner: Shabu-shabu",
+  "Bosque de Bambú de Arashiyama": "Arashiyama Bamboo Grove",
+  "Templo Tenryu-ji": "Tenryu-ji Temple",
+  "Comida: Tofu Yudofu": "Lunch: Yudofu tofu",
+  "Pabellón Dorado (Kinkaku-ji)": "Golden Pavilion (Kinkaku-ji)",
+  "Cena en Nishiki Market (Zona)": "Dinner in the Nishiki Market area",
+  "Tren a Nara": "Train to Nara",
+  "Templo Todai-ji": "Todai-ji Temple",
+  "Comida y Show de Mochi": "Lunch and mochi pounding show",
+  "Tren hacia Osaka": "Train to Osaka",
+  "Dotonbori: Locura Gastronómica": "Dotonbori food district",
+  "Castillo de Osaka": "Osaka Castle",
+  "Shinsekai: El Barrio Retro": "Shinsekai: the retro district",
+  "Comida: Daruma Kushikatsu": "Lunch: Daruma Kushikatsu",
+  "Den Den Town y Nipponbashi": "Den Den Town and Nipponbashi",
+  "Cena en Kuromon Ichiba o Namba": "Dinner in Kuromon Ichiba or Namba",
+  "Llegada Temprana a USJ": "Early arrival at USJ",
+  "Comida Temática y Harry Potter": "Themed lunch and Harry Potter area",
+  "Atracciones Adicionales": "Additional attractions",
+  "Cena: Universal CityWalk": "Dinner: Universal CityWalk",
+  "Shinkansen Shin-Osaka -> Hiroshima": "Shinkansen from Shin-Osaka to Hiroshima",
+  "Peace Memorial Park y Museo": "Peace Memorial Park and Museum",
+  "Comida: Okonomiyaki estilo Hiroshima": "Lunch: Hiroshima-style okonomiyaki",
+  "Miyajima e Itsukushima Shrine": "Miyajima and Itsukushima Shrine",
+  "Noche en Hiroshima": "Evening in Hiroshima",
+  "Traslado Hiroshima -> Nagasaki": "Transfer from Hiroshima to Nagasaki",
+  "Peace Park y Museo de la Bomba Atómica": "Peace Park and Atomic Bomb Museum",
+  "Dejima + Shinchi Chinatown": "Dejima and Shinchi Chinatown",
+  "Atardecer en Monte Inasa": "Sunset at Mount Inasa",
+  "Cena local y descanso": "Local dinner and rest",
+  "Traslado al Aeropuerto de Nagasaki": "Transfer to Nagasaki Airport",
+  "Vuelo doméstico a Osaka": "Domestic flight to Osaka",
+  "Check-in internacional en KIX": "International check-in at KIX",
+};
+
 function formatUsd(value) {
   return `$${Math.round(Number(value)).toLocaleString("en-US")}`;
 }
@@ -388,11 +517,7 @@ function normalizeMapsUrl(rawUrl) {
 
     const placeSegment = url.pathname.split("/place/")[1];
     if (placeSegment) {
-      const cleanPlace = decodeURIComponent(placeSegment)
-        .split("/@")[0]
-        .replace(/\+/g, " ")
-        .replace(/\//g, " ")
-        .trim();
+      const cleanPlace = decodeURIComponent(placeSegment).split("/@")[0].replace(/\+/g, " ").replace(/\//g, " ").trim();
       const query = /japan/i.test(cleanPlace) ? cleanPlace : `${cleanPlace} Japan`;
       return `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(query)}`;
     }
@@ -429,10 +554,7 @@ function updateTripDateRangeDisplay() {
   const endDate = getTripDateByDay(itineraryData.length);
 
   let rangeText = "";
-  if (
-    startDate.getFullYear() === endDate.getFullYear() &&
-    startDate.getMonth() === endDate.getMonth()
-  ) {
+  if (startDate.getFullYear() === endDate.getFullYear() && startDate.getMonth() === endDate.getMonth()) {
     const monthName = new Intl.DateTimeFormat("es-ES", { month: "long" }).format(startDate);
     rangeText = `Del ${startDate.getDate()} al ${endDate.getDate()} de ${monthName} de ${startDate.getFullYear()}`;
   } else {
@@ -452,9 +574,7 @@ function getTripDateByDay(dayNumber) {
 function formatTripDate(dayNumber, mode = "long") {
   const date = getTripDateByDay(dayNumber);
   if (mode === "pill") {
-    return new Intl.DateTimeFormat("es-ES", { day: "2-digit", month: "short" })
-      .format(date)
-      .replace(".", "");
+    return new Intl.DateTimeFormat("es-ES", { day: "2-digit", month: "short" }).format(date).replace(".", "");
   }
   const longText = new Intl.DateTimeFormat("es-ES", {
     weekday: "long",
@@ -485,7 +605,10 @@ function shortCityLabel(city) {
   if (/Himeji y Kobe/i.test(city)) return "Himeji+Kobe";
   if (/Viaje a Kioto/i.test(city)) return "Kioto";
 
-  const clean = city.split("·")[0].replace(/\s*\(.*?\)\s*/g, "").trim();
+  const clean = city
+    .split("·")[0]
+    .replace(/\s*\(.*?\)\s*/g, "")
+    .trim();
   if (clean.length <= 12) return clean;
   return clean.split(/\s+/)[0];
 }
@@ -549,8 +672,10 @@ function renderSelectors() {
     const attentionNote = itineraryAttentionByDay.get(d.day);
     const hasAttentionActivities = d.schedule.some((item) => item.attention);
     const dayFlags = [];
-    if (cashCriticalNote || hasCashActivities) dayFlags.push('<span class="day-pill-critical" aria-hidden="true">¥</span>');
-    if (attentionNote || hasAttentionActivities) dayFlags.push('<span class="day-pill-alert" aria-hidden="true">!</span>');
+    if (cashCriticalNote || hasCashActivities)
+      dayFlags.push('<span class="day-pill-critical" aria-hidden="true">¥</span>');
+    if (attentionNote || hasAttentionActivities)
+      dayFlags.push('<span class="day-pill-alert" aria-hidden="true">!</span>');
     const b = document.createElement("button");
     b.type = "button";
     b.dataset.day = d.day;
@@ -880,7 +1005,9 @@ function renderSafetyResearch() {
   if (travelReadiness) {
     const mustPackEl = document.getElementById("must-pack-list");
     if (mustPackEl) {
-      mustPackEl.innerHTML = travelReadiness.mustPack.map((item) => `<li class="safety-list-item">${item}</li>`).join("");
+      mustPackEl.innerHTML = travelReadiness.mustPack
+        .map((item) => `<li class="safety-list-item">${item}</li>`)
+        .join("");
     }
 
     const watchOutEl = document.getElementById("watchout-list");
@@ -977,3 +1104,272 @@ window.onload = () => {
   renderItinerary();
   renderBudget();
 };
+
+function normalizeEmbassyCityKey(value) {
+  const text = String(value || "")
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "");
+
+  if (text.includes("kix") || text.includes("kansai")) return "kix";
+  if (text.includes("hakone")) return "hakone";
+  if (text.includes("kamakura") || text.includes("enoshima")) return "kamakura";
+  if (text.includes("kyoto") || text.includes("kioto")) return "kioto";
+  if (text.includes("nara")) return "nara";
+  if (text.includes("osaka")) return "osaka";
+  if (text.includes("hiroshima") || text.includes("miyajima")) return "hiroshima";
+  if (text.includes("nagasaki")) return "nagasaki";
+  return "tokio";
+}
+
+function getEmbassyHotelForDay(dayData) {
+  const cityKey = normalizeEmbassyCityKey(dayData?.city || "");
+  return EMBASSY_PDF_CONFIG.hotelsByCity[cityKey] || EMBASSY_PDF_CONFIG.hotelsByCity.tokio;
+}
+
+function translateEmbassyActivityTitle(title) {
+  const safeTitle = String(title || "").trim();
+  return EMBASSY_ACTIVITY_TITLE_TRANSLATIONS[safeTitle] || safeTitle;
+}
+
+function buildEmbassyActivitySummary(dayData) {
+  const items = Array.isArray(dayData?.schedule) ? dayData.schedule : [];
+  if (!items.length) return "Sightseeing and local transport.";
+
+  const titles = items
+    .slice(0, 3)
+    .map((item) => translateEmbassyActivityTitle(item.t))
+    .filter(Boolean);
+
+  if (!titles.length) return "Sightseeing and local transport.";
+
+  const summary = titles.join(" / ");
+  return summary.length > 110 ? `${summary.slice(0, 107)}...` : summary;
+}
+
+function buildEmbassyContactLine(dayData) {
+  const hotel = getEmbassyHotelForDay(dayData);
+  return `${hotel.name} ${hotel.phone}`;
+}
+
+function buildEmbassyAccommodationLine(dayData) {
+  const hotel = getEmbassyHotelForDay(dayData);
+  const base = `${hotel.name}, ${hotel.address}`;
+  return base.length > 95 ? `${base.slice(0, 92)}...` : base;
+}
+
+function formatEmbassyDate(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}.${month}.${day}`;
+}
+
+function getTripEndDate() {
+  return getTripDateByDay(itineraryData.length);
+}
+
+function buildEmbassyRows() {
+  return itineraryData.map((dayData) => ({
+    day: dayData.day,
+    date: formatEmbassyDate(getTripDateByDay(dayData.day)),
+    activity: buildEmbassyActivitySummary(dayData),
+    contact: buildEmbassyContactLine(dayData),
+    accommodation: buildEmbassyAccommodationLine(dayData),
+  }));
+}
+
+function getEmbassyFormRows() {
+  return buildEmbassyRows().slice(0, 15);
+}
+
+function sanitizeEmbassyDownloadCell(value) {
+  return String(value || "")
+    .replace(/\s+/g, " ")
+    .replace(/\t/g, " ")
+    .trim();
+}
+
+function getEmbassyTableRows(rows) {
+  return [
+    ["Date", "Activity Plan", "Contact", "Accommodation"],
+    ...rows.map((row) => [
+      sanitizeEmbassyDownloadCell(row.date),
+      sanitizeEmbassyDownloadCell(row.activity),
+      sanitizeEmbassyDownloadCell(row.contact),
+      sanitizeEmbassyDownloadCell(row.accommodation),
+    ]),
+  ];
+}
+
+function getEmbassyReadableRows(rows) {
+  return rows.flatMap((row) => [
+    [`Day ${String(row.day).padStart(2, "0")}`],
+    ["Date", sanitizeEmbassyDownloadCell(row.date)],
+    ["Activity", sanitizeEmbassyDownloadCell(row.activity)],
+    ["Contact", sanitizeEmbassyDownloadCell(row.contact)],
+    ["Accommodation", sanitizeEmbassyDownloadCell(row.accommodation)],
+    [],
+  ]);
+}
+
+function getMoscowEmbassySummaryRows() {
+  const startDate = getTripDateByDay(1);
+  const endDate = getTripEndDate();
+  const rows = getEmbassyFormRows();
+
+  return [
+    ["MOSCOW - SCHEDULE OF STAY"],
+    [],
+    ["Main fields"],
+    ["Applicant name", EMBASSY_PDF_CONFIG.applicantName],
+    ["Companion count", String(EMBASSY_PDF_CONFIG.companionCount)],
+    ["Start day", String(startDate.getDate()).padStart(2, "0")],
+    ["Start month", String(startDate.getMonth() + 1).padStart(2, "0")],
+    ["Start year", String(startDate.getFullYear())],
+    ["Trip range", `${formatEmbassyDate(startDate)} -> ${formatEmbassyDate(endDate)}`],
+    ["Rows included", `${rows.length} (matching the form table)`],
+    [],
+    ["Recommended use"],
+    ["Note", "Use the 'Table' sheet to copy entries by column into the form."],
+  ];
+}
+
+function getCaracasEmbassySummaryRows() {
+  const startDate = getTripDateByDay(1);
+  const endDate = getTripEndDate();
+  const rows = getEmbassyFormRows();
+
+  return [
+    ["CARACAS - TRAVEL ITINERARY"],
+    [],
+    ["Main fields"],
+    ["Applicant name", EMBASSY_PDF_CONFIG.applicantName],
+    ["Year", String(startDate.getFullYear())],
+    ["Month", String(startDate.getMonth() + 1).padStart(2, "0")],
+    ["Day", String(startDate.getDate()).padStart(2, "0")],
+    ["Trip range", `${formatEmbassyDate(startDate)} -> ${formatEmbassyDate(endDate)}`],
+    ["Rows included", `${rows.length} (matching the form table)`],
+    [],
+    ["Recommended use"],
+    ["Note", "Use the 'Table' sheet to copy entries by column into the form."],
+  ];
+}
+
+function applyWorksheetColumnWidths(worksheet, widths) {
+  worksheet["!cols"] = widths.map((width) => ({ wch: width }));
+}
+
+function buildEmbassyWorkbook(type) {
+  if (!window.XLSX?.utils) {
+    throw new Error("SheetJS no está disponible.");
+  }
+
+  const rows = getEmbassyFormRows();
+  const summaryRows = type === "moscow" ? getMoscowEmbassySummaryRows() : getCaracasEmbassySummaryRows();
+  const tableRows = getEmbassyTableRows(rows);
+  const readableRows = getEmbassyReadableRows(rows);
+
+  const workbook = XLSX.utils.book_new();
+  const summarySheet = XLSX.utils.aoa_to_sheet(summaryRows);
+  const tableSheet = XLSX.utils.aoa_to_sheet(tableRows);
+  const readableSheet = XLSX.utils.aoa_to_sheet(readableRows);
+
+  applyWorksheetColumnWidths(summarySheet, [20, 48]);
+  applyWorksheetColumnWidths(tableSheet, [14, 48, 28, 40]);
+  applyWorksheetColumnWidths(readableSheet, [16, 58]);
+
+  XLSX.utils.book_append_sheet(workbook, summarySheet, "Summary");
+  XLSX.utils.book_append_sheet(workbook, tableSheet, "Table");
+  XLSX.utils.book_append_sheet(workbook, readableSheet, "Quick Reference");
+
+  return workbook;
+}
+
+function getEmbassyWorkbookFilename(type) {
+  return type === "moscow"
+    ? `schedule-moscow-data-${TRIP_START}.xlsx`
+    : `travel-itinerary-caracas-data-${TRIP_START}.xlsx`;
+}
+
+function getEmbassyTemplateFilename(type) {
+  return type === "moscow" ? "schedule-moscow-template.pdf" : "travel-itinerary-caracas-template.pdf";
+}
+
+function triggerBrowserDownload(url, filename) {
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.rel = "noopener";
+  document.body.appendChild(link);
+  link.click();
+  link.remove();
+}
+
+function downloadEmbassyWorkbook(type) {
+  const workbook = buildEmbassyWorkbook(type);
+  const writeFile = XLSX.writeFileXLSX || XLSX.writeFile;
+  writeFile(workbook, getEmbassyWorkbookFilename(type), { compression: true });
+}
+
+function closeEmbassyMenuFromChild(element) {
+  const menu = element.closest("details");
+  if (menu) {
+    menu.open = false;
+  }
+}
+
+function handleEmbassyDownloadMenuClick(button) {
+  const type = button.dataset.embassyType;
+  const action = button.dataset.embassyAction;
+
+  if (!type || !action) return;
+
+  try {
+    if (action === "template") {
+      triggerBrowserDownload(EMBASSY_PDF_CONFIG.templates[type], getEmbassyTemplateFilename(type));
+    } else if (action === "data") {
+      downloadEmbassyWorkbook(type);
+    }
+  } catch (error) {
+    console.error(error);
+    alert(`No se pudo completar la descarga de ${type === "moscow" ? "Moscú" : "Caracas"}.`);
+  } finally {
+    closeEmbassyMenuFromChild(button);
+  }
+}
+
+function bindEmbassyDownloadMenus() {
+  const root = document.getElementById("embassy-download-menus");
+  if (!root) {
+    console.warn("No se encontró el contenedor de descargas de visa.");
+    return;
+  }
+
+  if (root.dataset.boundEmbassyMenus === "1") return;
+  root.dataset.boundEmbassyMenus = "1";
+
+  const menus = Array.from(root.querySelectorAll(".visa-download-menu"));
+  menus.forEach((menu) => {
+    menu.addEventListener("toggle", () => {
+      if (!menu.open) return;
+      menus.forEach((otherMenu) => {
+        if (otherMenu !== menu) {
+          otherMenu.open = false;
+        }
+      });
+    });
+  });
+
+  root.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-embassy-action]");
+    if (!button) return;
+    handleEmbassyDownloadMenuClick(button);
+  });
+}
+
+if (document.readyState === "loading") {
+  window.addEventListener("DOMContentLoaded", bindEmbassyDownloadMenus);
+} else {
+  bindEmbassyDownloadMenus();
+}

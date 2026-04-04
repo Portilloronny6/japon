@@ -12,6 +12,7 @@
     />
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 
     <script>
       tailwind.config = {
@@ -108,8 +109,8 @@
             </p>
             <h2 class="text-5xl font-black text-ink mb-5 tracking-tight">Plan de Ruta Maestro</h2>
             <p class="text-xl text-gray-600 max-w-3xl leading-relaxed">
-              Itinerario optimizado para <strong>IC Cards + Billetes Sueltos</strong>, con enlaces de Google Maps normalizados a
-              coordenadas para abrir cada punto exacto.
+              Itinerario optimizado para <strong>IC Cards + Billetes Sueltos</strong>, con enlaces de Google Maps
+              normalizados a coordenadas para abrir cada punto exacto.
             </p>
           </div>
           <aside class="panel-glass border border-white/80 rounded-[28px] p-6 shadow-lg min-w-[210px]">
@@ -134,18 +135,75 @@
             <p id="summary-duration-days" class="text-3xl font-black text-ink">15 Días</p>
           </div>
         </div>
-
-        <div class="mb-2">
-          <div class="bg-ink p-10 rounded-[40px] text-white flex flex-col md:flex-row items-center gap-8 shadow-2xl">
-            <div class="flex-1 text-center md:text-left">
-              <h3 class="text-3xl font-bold mb-4">Nota de Navegación</h3>
-              <p class="opacity-80 text-lg">
-                Los iconos de mapa abren la zona exacta. Si el enlace original no trae coordenadas, se transforma a una
-                búsqueda precisa por lugar y ciudad en Japón.
+        <div class="mt-8 panel-glass border border-white/80 rounded-[32px] p-6 md:p-8 shadow-sm">
+          <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5">
+            <div>
+              <p class="text-xs font-black uppercase tracking-[0.2em] text-japan-wave mb-2">Documentos para visa</p>
+              <h3 class="text-2xl md:text-3xl font-black text-ink mb-2">Plantillas y datos listos para copiar</h3>
+              <p class="text-gray-600 max-w-3xl leading-relaxed">
+                Cada menú te deja descargar la planilla original y un archivo de Excel con la información resumida del
+                itinerario actual. Si cambias días, actividades, hoteles o ciudades, el archivo de datos sale
+                actualizado para que puedas copiar y pegar a mano en la planilla.
               </p>
             </div>
-            <div class="text-6xl">🗾</div>
+            <div id="embassy-download-menus" class="visa-download-grid">
+              <details class="visa-download-menu">
+                <summary class="visa-download-trigger visa-download-trigger-red">
+                  Moscú
+                  <span class="visa-download-trigger-subtitle">Schedule of Stay</span>
+                </summary>
+                <div class="visa-download-panel">
+                  <p class="visa-download-help">Usa la plantilla oficial o baja el Excel resumido del itinerario.</p>
+                  <button
+                    type="button"
+                    class="visa-download-option"
+                    data-embassy-action="template"
+                    data-embassy-type="moscow"
+                  >
+                    Descargar planilla PDF
+                  </button>
+                  <button
+                    type="button"
+                    class="visa-download-option"
+                    data-embassy-action="data"
+                    data-embassy-type="moscow"
+                  >
+                    Descargar Excel para copiar
+                  </button>
+                </div>
+              </details>
+
+              <details class="visa-download-menu">
+                <summary class="visa-download-trigger visa-download-trigger-blue">
+                  Caracas
+                  <span class="visa-download-trigger-subtitle">Travel Itinerary</span>
+                </summary>
+                <div class="visa-download-panel">
+                  <p class="visa-download-help">Usa la plantilla oficial o baja el Excel resumido del itinerario.</p>
+                  <button
+                    type="button"
+                    class="visa-download-option"
+                    data-embassy-action="template"
+                    data-embassy-type="caracas"
+                  >
+                    Descargar planilla PDF
+                  </button>
+                  <button
+                    type="button"
+                    class="visa-download-option"
+                    data-embassy-action="data"
+                    data-embassy-type="caracas"
+                  >
+                    Descargar Excel para copiar
+                  </button>
+                </div>
+              </details>
+            </div>
           </div>
+          <p class="text-[11px] text-gray-400 font-bold mt-4 uppercase tracking-[0.14em]">
+            El Excel se genera desde el itinerario actual e incluye una hoja resumen y otra tabla para copiar y pegar
+            manualmente.
+          </p>
         </div>
       </section>
 
