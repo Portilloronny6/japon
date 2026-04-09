@@ -63,6 +63,10 @@ const EMBASSY_PDF_CONFIG = {
 const EMBASSY_ACTIVITY_TITLE_TRANSLATIONS = {
   "Llegada al Aeropuerto de Haneda (HND)": "Arrival at Haneda Airport (HND)",
   "Traslado Haneda -> Shinjuku (Keikyu + JR)": "Transfer from Haneda to Shinjuku (Keikyu + JR)",
+  "Migración, equipaje y conectividad en Haneda": "Immigration, baggage, and connectivity at Haneda",
+  "Traslado Haneda -> Shinjuku (Keikyu + JR / Taxi nocturno)":
+    "Transfer from Haneda to Shinjuku (Keikyu + JR / late-night taxi)",
+  "Check-in tardío y cena ligera en Shinjuku": "Late check-in and light dinner in Shinjuku",
   "Check-in y Comida Rápida": "Hotel check-in and quick meal",
   "Mirador del Gobierno Metropolitano": "Tokyo Metropolitan Government Building Observatory",
   "Cena: Omoide Yokocho (Callejón del Recuerdo)": "Dinner: Omoide Yokocho (Memory Lane)",
@@ -129,8 +133,12 @@ const EMBASSY_ACTIVITY_TITLE_TRANSLATIONS = {
   "Atardecer en Monte Inasa": "Sunset at Mount Inasa",
   "Cena local y descanso": "Local dinner and rest",
   "Traslado al Aeropuerto de Nagasaki": "Transfer to Nagasaki Airport",
+  "Traslado al Aeropuerto de Nagasaki (NGS)": "Transfer to Nagasaki Airport (NGS)",
   "Vuelo doméstico a Osaka": "Domestic flight to Osaka",
+  "Vuelo doméstico Nagasaki -> Haneda (HND)": "Domestic flight from Nagasaki to Haneda (HND)",
   "Check-in internacional en KIX": "International check-in at KIX",
+  "Check-in internacional y control en Haneda": "International check-in and security at Haneda",
+  "Vuelo de salida (Haneda)": "Departure flight (Haneda)",
 };
 
 function formatUsd(value) {
@@ -1111,6 +1119,7 @@ function normalizeEmbassyCityKey(value) {
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
 
+  if (text.includes("haneda") || text.includes("hnd")) return "tokio";
   if (text.includes("kix") || text.includes("kansai")) return "kix";
   if (text.includes("hakone")) return "hakone";
   if (text.includes("kamakura") || text.includes("enoshima")) return "kamakura";
